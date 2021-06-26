@@ -11,7 +11,7 @@ const ProductScreen = ({ match }) => {
   const dispatch = useDispatch()
 
   const productDetails = useSelector((state) => state.productDetails)
-  const { loading, product, error } = productDetails
+  const { product, error } = productDetails
 
   useEffect(() => {
     dispatch(listProductDetails(match.params.id))
@@ -22,10 +22,10 @@ const ProductScreen = ({ match }) => {
       <Link className='btn btn-dark my-3' to='/'>
         Go Back
       </Link>
-      {loading ? (
+      {!product._id || product._id !== match.params.id ? (
         <Loader />
       ) : error ? (
-        <Message variant='danger'>{error}</Message>
+        <Message variant='danger' message={error} />
       ) : (
         <Row>
           <Col md={6}>
