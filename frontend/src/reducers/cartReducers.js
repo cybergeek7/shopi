@@ -6,14 +6,14 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
       const item = action.payload
 
       const existItem = state.cartItems.find(
-        (stateCartItem) => stateCartItem.product === item.product
+        (stateCartItem) => stateCartItem.id === item.id
       )
 
       if (existItem) {
         return {
           ...state,
           cartItems: state.cartItems.map((stateCartItem) =>
-            stateCartItem.product === existItem.product ? item : stateCartItem
+            stateCartItem.id === existItem.id ? item : stateCartItem
           ),
         }
       } else {
