@@ -36,7 +36,7 @@ const LoginScreen = ({ location, history }) => {
       {error && <Message variant='danger'>{error}</Message>}
       {loading && <Loader />}
       <Form onSubmit={submitHandler}>
-        <Form.Group controlId='email'>
+        <Form.Group controlId='email' className='py-3'>
           <Form.Label>Email Address</Form.Label>
           <Form.Control
             type='email'
@@ -55,12 +55,12 @@ const LoginScreen = ({ location, history }) => {
           ></Form.Control>
         </Form.Group>
 
-        <Button type='submit' variant='primary'>
+        <Button type='submit' variant='primary' className='my-4'>
           Sign In
         </Button>
       </Form>
 
-      <Row className='py-3'>
+      <Row className='py-2'>
         <Col>
           New Customer?{' '}
           <Link to={redirect ? `/register?redirect=${redirect}` : '/register'}>
