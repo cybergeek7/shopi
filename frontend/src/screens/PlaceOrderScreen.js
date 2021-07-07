@@ -1,24 +1,47 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Row, Col, ListGroup, Image, Card, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import CheckoutSteps from '../components/CheckoutSteps'
+import { createOrder } from '../actions/orderActions'
 
-const PlaceOrderScreen = () => {
+const PlaceOrderScreen = ({ history }) => {
+  const dispatch = useDispatch()
+
   const cart = useSelector((state) => state.cart)
 
   // Calculate prices
-  const itemsPrice = cart.cartItems.reduce(
+  cart.itemsPrice = cart.cartItems.reduce(
     (acc, item) => acc + item.price * item.qty,
     0
   )
-  const shippingPrice = itemsPrice > 100 ? 0 : 10
-  const taxPrice = 0.15 * itemsPrice
-  const totalPrice = itemsPrice + shippingPrice + taxPrice
+  cart.shippingPrice = cart.itemsPrice > 100 ? 0 : 10
+  cart.taxPrice = 0.15 * cart.itemsPrice
+  cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice
+
+  const orderCreate = useSelector((state) => state.orderCreate)
+  const { order, success, error } = orderCreate
+
+  useEffect(() => {
+    if (success) {
+      history.push(`/order/${order._id}`)
+    }
+    // eslint-disable-next-line
+  }, [history, success])
 
   const placeOrderHandler = () => {
-    console.log('Place Order')
+    dispatch(
+      createOrder({
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice: cart.itemsPrice,
+        shippingPrice: cart.shippingPrice,
+        taxPrice: cart.taxPrice,
+        totalPrice: cart.totalPrice,
+      })
+    )
   }
 
   return (
@@ -52,7 +75,7 @@ const PlaceOrderScreen = () => {
               ) : (
                 <ListGroup variant='flush'>
                   {cart.cartItems.map((item) => (
-                    <ListGroup.Item key={item.id}>
+                    <ListGroup.Item key={item.itemId}>
                       <Row>
                         <Col md={1}>
                           <Image
@@ -85,26 +108,29 @@ const PlaceOrderScreen = () => {
               <ListGroup.Item>
                 <Row>
                   <Col>Items</Col>
-                  <Col>${itemsPrice.toFixed(2)}</Col>
+                  <Col>${cart.itemsPrice.toFixed(2)}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
-                  <Col>${shippingPrice.toFixed(2)}</Col>
+                  <Col>${cart.shippingPrice.toFixed(2)}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Tax</Col>
-                  <Col>${taxPrice.toFixed(2)}</Col>
+                  <Col>${cart.taxPrice.toFixed(2)}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Total</Col>
-                  <Col>${totalPrice.toFixed(2)}</Col>
+                  <Col>${cart.totalPrice.toFixed(2)}</Col>
                 </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                {error && <Message variant='danger'>{error}</Message>}
               </ListGroup.Item>
               <ListGroup.Item className='d-grid gap-2'>
                 <Button

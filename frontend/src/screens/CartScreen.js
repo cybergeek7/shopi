@@ -21,8 +21,8 @@ const CartScreen = ({ match, location, history }) => {
     }
   }, [dispatch, productId, qty])
 
-  const removeFromCartHandler = (id) => {
-    dispatch(removeFromCart(id))
+  const removeFromCartHandler = (itemId) => {
+    dispatch(removeFromCart(itemId))
     history.push('/cart')
   }
 
@@ -41,13 +41,13 @@ const CartScreen = ({ match, location, history }) => {
         ) : (
           <ListGroup variant='flush'>
             {cartItems.map((item) => (
-              <ListGroup.Item key={item.id}>
+              <ListGroup.Item key={item.itemId}>
                 <Row>
                   <Col md={2}>
                     <Image src={item.image} alt={item.name} fluid rounded />
                   </Col>
                   <Col md={3}>
-                    <Link to={`/product/${item.id}`}>{item.name}</Link>
+                    <Link to={`/product/${item.itemId}`}>{item.name}</Link>
                   </Col>
                   <Col md={2}>${item.price}</Col>
                   <Col md={2}>
@@ -55,7 +55,7 @@ const CartScreen = ({ match, location, history }) => {
                       as='select'
                       value={item.qty}
                       onChange={(e) => {
-                        dispatch(addToCart(item.id, Number(e.target.value)))
+                        dispatch(addToCart(item.itemId, Number(e.target.value)))
                         history.push('/cart')
                       }}
                     >
@@ -73,7 +73,7 @@ So, [...Array(3).keys()] creates a new array of 3 elements, populated by the key
                     <Button
                       type='button'
                       variant='light'
-                      onClick={() => removeFromCartHandler(item.id)}
+                      onClick={() => removeFromCartHandler(item.itemId)}
                     >
                       <i className='fas fa-trash'></i>
                     </Button>

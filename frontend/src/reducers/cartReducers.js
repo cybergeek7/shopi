@@ -14,14 +14,14 @@ export const cartReducer = (
       const item = action.payload
 
       const existItem = state.cartItems.find(
-        (stateCartItem) => stateCartItem.id === item.id
+        (stateCartItem) => stateCartItem.itemId === item.itemId
       )
 
       if (existItem) {
         return {
           ...state,
           cartItems: state.cartItems.map((stateCartItem) =>
-            stateCartItem.id === existItem.id ? item : stateCartItem
+            stateCartItem.itemId === existItem.itemId ? item : stateCartItem
           ),
         }
       } else {
@@ -35,7 +35,7 @@ export const cartReducer = (
       return {
         ...state,
         cartItems: state.cartItems.filter(
-          (stateCartItem) => stateCartItem.id !== action.payload
+          (stateCartItem) => stateCartItem.itemId !== action.payload
         ),
       }
 
