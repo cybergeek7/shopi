@@ -24,7 +24,11 @@ import {
 export const productListReducer = (state = { products: [] }, action) => {
   switch (action.type) {
     case PRODUCT_LIST_SUCCESS:
-      return { products: action.payload }
+      return {
+        products: action.payload.products,
+        pages: action.payload.pages,
+        page: action.payload.page,
+      }
     case PRODUCT_LIST_FAIL:
       return { error: action.payload }
     default:
